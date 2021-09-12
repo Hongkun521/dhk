@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <setting name="logImpl" value="STDOUT_LOGGING"/>
+    </settings>
+    <typeAliases>
+        <!--name实体类所在包名，起到起别名的作用-->
+        <package name="com.dhk.crm.settings.domain"/>
+        <package name="com.dhk.crm.workbench.domain"/>
+    </typeAliases>
+    <mappers>
+        <!--告诉 mybatis 要执行的 sql 语句的位置，mapper文件所在的包名-->
+        <!--<mapper resource="com/dhk/dao/StudentDao.xml"/>-->
+        <!--
+         name：是包名， 这个包中的所有mapper.xml一次都能加载
+         使用package的要求：
+          1. mapper文件名称和dao接口名必须完全一样，包括大小写
+          2. mapper文件和dao接口必须在同一目录
+       -->
+        <package name="com.dhk.crm.settings.dao"/>
+        <package name="com.dhk.crm.workbench.dao"/>
+    </mappers>
+</configuration>

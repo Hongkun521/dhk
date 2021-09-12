@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd
+       http://www.springframework.org/schema/aop
+       https://www.springframework.org/schema/aop/spring-aop.xsd
+       http://www.springframework.org/schema/mvc
+       https://www.springframework.org/schema/mvc/spring-mvc.xsd">
+    <!--spring配置文件:声明service、dao、工具类对象-->
+    <context:property-placeholder location="classpath:/config/jdbc.properties"/>
+    <!--声明数据源，连接数据库-->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jdbc.url}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+    </bean>
+
+    <!--SqlSessionFactoryBean创建SqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="configLocation" value="classpath:/config/mybatis.xml"/>
+    </bean>
+
+    <!--声明mybatis的扫描器，创建dao对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.dhk.crm.settings.dao"/>
+    </bean>
+    <!--声明mybatis的扫描器，创建dao对象-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <property name="basePackage" value="com.dhk.crm.workbench.dao"/>
+    </bean>
+
+    <!--声明service注解 @Service所在包名位置-->
+    <context:component-scan base-package="com.dhk.crm.settings.service"/>
+    <context:component-scan base-package="com.dhk.crm.workbench.service"/>
+
+    <!--声明目标类对象-->
+    <bean id="userServiceImpl" class="com.dhk.crm.settings.service.impl.UserServiceImpl"/>
+    <bean id="activityServiceImpl" class="com.dhk.crm.workbench.service.impl.ActivityServiceImpl"/>
+    <bean id="clueServiceImpl" class="com.dhk.crm.workbench.service.impl.ClueServiceImpl"/>
+
+    <!--声明异常处理配置文件-->
+    <context:component-scan base-package="com.dhk.crm.handler"/>
+    <mvc:annotation-driven/>
+
+
+    <!--声明切面对象-->
+    <bean id="myAspectj" class="com.dhk.crm.settings.aspectj.MyAspectj"/>
+    <!--声明自动代理类对象,创建代理-->
+    <aop:aspectj-autoproxy/>
+</beans>
